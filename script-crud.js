@@ -7,7 +7,11 @@ const ulTarefas = document.querySelector('.app__section-task-list')
 
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || []
 
-function criarElementoTarefa (tarefa) {
+function atualizarTarefas() {
+    localStorage.setItem('tarefas', JSON.stringify(tarefas))
+}
+
+function criarElementoTarefa(tarefa) {
     const li = document.createElement('li')
     li.classList.add('app__section-task-list-item')
 
@@ -24,6 +28,16 @@ function criarElementoTarefa (tarefa) {
 
     const botao = document.createElement('button')
     botao.classList.add('app_button-edit')
+
+    botao.onclick = () => {
+        const novaDescricao = prompt("Qual é o novo nome da tarefa?")
+        console.log('Nova descrição da tarefa: ', novaDescricao)
+        if (novaDescricao) {
+            paragrafo.textContent = novaDescricao
+            tarefa.descricao = novaDescricao
+            atualizarTarefas()
+        }
+    }
 
 
     const imagemBotao = document.createElement('img')
@@ -50,7 +64,7 @@ formAdicionarTarefa.addEventListener('submit', (evento) => {
     tarefas.push(tarefa)
     const elementoTarefa = criarElementoTarefa(tarefa)
     ulTarefas.append(elementoTarefa)
-    localStorage.setItem('tarefas', JSON.stringify(tarefas))
+    atualizarTarefas()
     textArea.value = ''
     formAdicionarTarefa.classList.add('hidden')
 })
@@ -59,3 +73,15 @@ tarefas.forEach(tarefa => {
     const elementoTarefa = criarElementoTarefa(tarefa)
     ulTarefas.append(elementoTarefa)
 });
+
+// Selecione o botão de Cancelar que adicionamos ao formulário
+const btnCancelar = document.querySelector('.app__form-footer__button--cancel');
+
+// Crie uma função para limpar o conteúdo do textarea e esconder o formulário
+const limparFormulario = () => {
+    textArea.value = '';  // Limpe o conteúdo do textarea
+    formAdicionarTarefa.classList.add('hidden');  // Adicione a classe 'hidden' ao formulário para escondê-lo
+}
+
+// Associe a função limparFormulario ao evento de clique do botão Cancelar
+btnCancelar.addEventListener('click', limparFormulario);
